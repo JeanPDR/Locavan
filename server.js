@@ -6,14 +6,15 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-app.use(express.static('../client')); // Servir arquivos estáticos do diretório 'client'
+app.use(express.static('client'));
 
 io.on('connection', (socket) => {
     console.log('New user connected');
 
-    // Recebe a localização de um usuário e a envia para todos os outros usuários
-    socket.on('sendLocation', (locationData) => {
-        io.emit('locationUpdate', locationData); // Envio para todos incluindo o remetente
+    // Recebe a localização de um cliente e envia para todos os clientes conectados
+    socket.on('location', (data) => {
+        console.log('Location received: ', data);
+        io.emit('locationUpdate', data); // Envio para todos os clientes
     });
 
     socket.on('disconnect', () => {
